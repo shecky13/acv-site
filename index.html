@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACV® Academy — Système de Progression</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #1a1a1a;
+    --bg2: #262626;
+    --bg3: #363636;
+    --gold: #D4A820;
+    --gold-light: #F5D876;
+    --gold-dim: #9a7a18;
+    --violet: #3B2E8A;
+    --violet-light: #534AB7;
+    --violet-bright: #7B6FD4;
+    --white: #ffffff;
+    --gray: #CCCCCC;
+    --gray-dim: #888888;
+    --red: #D96A6A;
+    --green: #4CAF7D;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    --glow-gold: 0 0 20px rgba(212,168,32,0.3);
+    --glow-violet: 0 0 20px rgba(83,74,183,0.3);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── ANIMATED BG ── */
+  .bg-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: floatOrb 12s ease-in-out infinite;
+    opacity: 0.12;
+  }
+  .orb-1 { width: 500px; height: 500px; background: var(--gold); top: -100px; left: -100px; animation-delay: 0s; }
+  .orb-2 { width: 400px; height: 400px; background: var(--violet); bottom: -100px; right: -100px; animation-delay: 4s; }
+  .orb-3 { width: 300px; height: 300px; background: var(--gold); top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: 8s; }
+
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(30px,-20px) scale(1.05); }
+    66% { transform: translate(-20px,30px) scale(0.95); }
+  }
+
+  /* ── LAYOUT ── */
+  .app { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid rgba(212,168,32,0.2);
+    margin-bottom: 32px;
+  }
+  .header-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .header-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .header-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--gray-dim);
+  }
+
+  /* ── HERO CARD ── */
+  .hero-card {
+    background: linear-gradient(135deg, var(--bg2) 0%, #1e1a3a 100%);
+    border: 1px solid rgba(212,168,32,0.25);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow), var(--glow-gold);
+  }
+  .hero-top {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--violet), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(212,168,32,0.3);
+  }
+  .hero-info { flex: 1; min-width: 0; }
+  .hero-name {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .hero-level {
+    font-size: 13px;
+    color: var(--gold);
+    margin: 4px 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .hero-badges-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge-pill {
+    background: rgba(83,74,183,0.2);
+    border: 1px solid rgba(83,74,183,0.4);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--violet-bright);
+    font-weight: 600;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px,1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label { font-size: 11px; color: var(--gray-dim); margin-top: 2px; }
+
+  /* ── XP BAR ── */
+  .xp-section { margin-bottom: 0; }
+  .xp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .xp-label { font-size: 12px; color: var(--gray-dim); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .xp-val { font-size: 13px; color: var(--gold); font-weight: 700; }
+  .xp-track {
+    height: 12px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--violet-light), var(--gold));
+    border-radius: 6px;
+    width: 68%;
+    position: relative;
+    animation: xpPulse 3s ease-in-out infinite;
+  }
+  .xp-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s linear infinite;
+  }
+  @keyframes xpPulse { 0%,100%{box-shadow:0 0 8px rgba(212,168,32,0.4)} 50%{box-shadow:0 0 16px rgba(212,168,32,0.7)} }
+  @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(400%)} }
+
+  /* ── TABS ── */
+  .tabs-wrap {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--gray-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .tab-btn:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--violet), var(--gold-dim));
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(83,74,183,0.4);
+  }
+  .tab-icon { display: block; font-size: 18px; margin-bottom: 2px; }
+
+  /* ── PANELS ── */
+  .panel { display: none; animation: fadeIn 0.3s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(212,168,32,0.4), transparent);
+  }
+
+  /* ── CALENDAR ── */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: default;
+    transition: transform 0.2s;
+  }
+  .cal-day:hover { transform: scale(1.1); }
+  .cal-day.done { background: linear-gradient(135deg, var(--green), #2d7a55); color: var(--white); }
+  .cal-day.missed { background: rgba(217,106,106,0.2); color: var(--red); border: 1px solid rgba(217,106,106,0.3); }
+  .cal-day.today { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: var(--bg); box-shadow: 0 0 12px rgba(212,168,32,0.5); animation: todayPulse 2s ease-in-out infinite; }
+  .cal-day.future { background: rgba(255,255,255,0.04); color: var(--gray-dim); border: 1px dashed rgba(255,255,255,0.1); }
+  @keyframes todayPulse { 0%,100%{box-shadow:0 0 8px rgba(212,168,32,0.5)} 50%{box-shadow:0 0 20px rgba(212,168,32,0.8)} }
+
+  /* ── CHALLENGES ── */
+  .challenge-list { display: flex; flex-direction: column; gap: 10px; }
+  .challenge-item {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+  .challenge-item:hover { border-color: rgba(212,168,32,0.3); transform: translateX(4px); }
+  .challenge-item.done { border-color: rgba(76,175,125,0.3); opacity: 0.7; }
+  .ch-icon { font-size: 24px; flex-shrink: 0; }
+  .ch-info { flex: 1; min-width: 0; }
+  .ch-name { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+  .ch-sub { font-size: 12px; color: var(--gray-dim); }
+  .ch-xp {
+    background: rgba(212,168,32,0.15);
+    border: 1px solid rgba(212,168,32,0.3);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .ch-xp.done { background: rgba(76,175,125,0.15); border-color: rgba(76,175,125,0.3); color: var(--green); }
+
+  /* ── PATH MAP ── */
+  .path-map { display: flex; flex-direction: column; gap: 16px; }
+  .path-module {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .path-module.active-mod { border-color: rgba(212,168,32,0.4); box-shadow: var(--glow-gold); }
+  .path-module.locked { opacity: 0.5; }
+  .path-module-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+  }
+  .mod-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .mod-num.done { background: linear-gradient(135deg, var(--green), #1e6644); color: var(--white); }
+  .mod-num.active { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: var(--bg); box-shadow: 0 0 12px rgba(212,168,32,0.4); }
+  .mod-num.locked { background: rgba(255,255,255,0.08); color: var(--gray-dim); }
+  .mod-info { flex: 1; min-width: 0; }
+  .mod-title { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .mod-meta { font-size: 12px; color: var(--gray-dim); }
+  .mod-prog-wrap { width: 100%; margin-top: 6px; }
+  .mod-prog-track { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .mod-prog-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--violet-light), var(--gold)); transition: width 0.8s ease; }
+  .mod-status { font-size: 20px; flex-shrink: 0; }
+
+  .lessons-list { padding: 0 20px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .lesson-item:hover { background: rgba(212,168,32,0.08); border-color: rgba(212,168,32,0.2); }
+  .lesson-item.done-lesson { opacity: 0.7; }
+  .lesson-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .lesson-dot.done { background: var(--green); }
+  .lesson-dot.active { background: var(--gold); box-shadow: 0 0 6px rgba(212,168,32,0.6); animation: todayPulse 2s infinite; }
+  .lesson-dot.locked { background: var(--gray-dim); }
+  .lesson-name { flex: 1; font-size: 13px; color: var(--gray); }
+  .lesson-type {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .lesson-type.video { background: rgba(83,74,183,0.2); color: var(--violet-bright); }
+  .lesson-type.quiz { background: rgba(212,168,32,0.15); color: var(--gold); }
+  .lesson-type.atelier { background: rgba(76,175,125,0.15); color: var(--green); }
+  .lesson-xp { font-size: 11px; color: var(--gold-dim); font-weight: 700; white-space: nowrap; }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background: var(--bg2);
+    border: 1px solid rgba(212,168,32,0.2);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .quiz-progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .quiz-q-num { font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 1px; }
+  .quiz-track { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; margin: 0 16px; }
+  .quiz-fill { height: 100%; background: linear-gradient(90deg, var(--violet-light), var(--gold)); border-radius: 3px; transition: width 0.5s ease; }
+  .quiz-score-pill {
+    background: rgba(212,168,32,0.15);
+    border: 1px solid rgba(212,168,32,0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .quiz-question {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    padding: 14px 18px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.03);
+    color: var(--gray);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: rgba(212,168,32,0.4); background: rgba(212,168,32,0.08); color: var(--white); }
+  .quiz-opt.correct { border-color: var(--green); background: rgba(76,175,125,0.15); color: var(--white); }
+  .quiz-opt.wrong { border-color: var(--red); background: rgba(217,106,106,0.15); color: var(--white); }
+  .quiz-feedback {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+  .quiz-feedback.correct { background: rgba(76,175,125,0.15); border: 1px solid rgba(76,175,125,0.3); color: var(--green); }
+  .quiz-feedback.wrong { background: rgba(217,106,106,0.15); border: 1px solid rgba(217,106,106,0.3); color: var(--red); }
+  .quiz-next-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--violet), var(--gold-dim));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .quiz-next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(83,74,183,0.4); }
+  .quiz-next-btn.show { display: block; animation: fadeIn 0.3s ease; }
+
+  .quiz-stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+  }
+  .qstat-box {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+  }
+  .qstat-val { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 700; color: var(--gold); display: block; }
+  .qstat-label { font-size: 11px; color: var(--gray-dim); margin-top: 4px; }
+
+  /* ── BADGES ── */
+  .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 16px; }
+  .badge-card {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .badge-card.earned { border-color: rgba(212,168,32,0.3); }
+  .badge-card.earned:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(212,168,32,0.2); border-color: rgba(212,168,32,0.6); }
+  .badge-card.locked-badge { opacity: 0.4; filter: grayscale(0.6); }
+  .badge-emoji { font-size: 38px; margin-bottom: 10px; display: block; }
+  .badge-card.earned .badge-emoji { animation: badgeBounce 3s ease-in-out infinite; }
+  @keyframes badgeBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  .badge-name { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .badge-cond { font-size: 11px; color: var(--gray-dim); }
+  .badge-earned-tag {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--gold);
+    color: var(--bg);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+  .badge-locked-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(26,26,26,0.8));
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  /* ── LEADERBOARD ── */
+  .podium {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding: 20px 0;
+  }
+  .podium-item { text-align: center; flex: 1; max-width: 160px; }
+  .podium-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    position: relative;
+  }
+  .podium-item.p1 .podium-avatar { width: 68px; height: 68px; border: 3px solid var(--gold); box-shadow: 0 0 20px rgba(212,168,32,0.5); }
+  .podium-item.p2 .podium-avatar { border: 2px solid #C0C0C0; }
+  .podium-item.p3 .podium-avatar { border: 2px solid #CD7F32; }
+  .crown { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 18px; }
+  .podium-name { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
+  .podium-xp { font-size: 11px; color: var(--gold); font-weight: 700; }
+  .podium-bar {
+    border-radius: 8px 8px 0 0;
+    margin: 8px auto 0;
+    width: 80%;
+  }
+  .podium-item.p1 .podium-bar { height: 80px; background: linear-gradient(180deg, var(--gold), var(--gold-dim)); }
+  .podium-item.p2 .podium-bar { height: 56px; background: linear-gradient(180deg, #C0C0C0, #888); }
+  .podium-item.p3 .podium-bar { height: 40px; background: linear-gradient(180deg, #CD7F32, #9a5f25); }
+  .podium-rank { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--bg); line-height: 1; padding-top: 10px; }
+
+  .leaderboard-list { display: flex; flex-direction: column; gap: 8px; }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+  }
+  .lb-row.me { border-color: rgba(212,168,32,0.4); background: rgba(212,168,32,0.06); }
+  .lb-row:hover { transform: translateX(4px); }
+  .lb-pos { width: 24px; font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; color: var(--gray-dim); text-align: center; flex-shrink: 0; }
+  .lb-pos.top { color: var(--gold); }
+  .lb-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .lb-name { flex: 1; font-size: 14px; font-weight: 600; color: var(--white); }
+  .lb-me-tag { font-size: 10px; color: var(--gold); font-weight: 700; background: rgba(212,168,32,0.15); border-radius: 10px; padding: 2px 8px; }
+  .lb-xp { font-size: 13px; color: var(--gold); font-weight: 700; }
+  .lb-trend { font-size: 14px; }
+
+  /* ── CERTIFICATE ── */
+  .cert-preview {
+    background: linear-gradient(135deg, #1e1a3a 0%, #2a1f10 100%);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(212,168,32,0.2);
+  }
+  .cert-preview::before, .cert-preview::after {
+    content: '';
+    position: absolute;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,168,32,0.15), transparent);
+  }
+  .cert-preview::before { top: -30px; left: -30px; }
+  .cert-preview::after { bottom: -30px; right: -30px; }
+  .cert-seal { font-size: 52px; margin-bottom: 12px; }
+  .cert-brand { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+  .cert-title { font-family: 'Cinzel', serif; font-size: clamp(16px,3vw,22px); font-weight: 700; color: var(--white); margin-bottom: 6px; }
+  .cert-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; color: var(--gray-dim); margin-bottom: 20px; }
+  .cert-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--gold); border-bottom: 1px solid rgba(212,168,32,0.3); padding-bottom: 8px; margin-bottom: 20px; }
+  .cert-criteria { display: flex; flex-direction: column; gap: 10px; }
+  .crit-row { display: flex; align-items: center; gap: 12px; }
+  .crit-label { flex: 1; font-size: 13px; color: var(--gray); text-align: left; }
+  .crit-track { width: 120px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+  .crit-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--violet-light), var(--gold)); }
+  .crit-pct { font-size: 12px; color: var(--gold); font-weight: 700; width: 36px; text-align: right; }
+
+  /* ── TOAST ── */
+  .toast-wrap { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+  .toast {
+    background: var(--bg2);
+    border: 1px solid rgba(212,168,32,0.4);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow), var(--glow-gold);
+    animation: toastIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+    max-width: 280px;
+  }
+  .toast.fade-out { animation: toastOut 0.3s ease forwards; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(100%)} to{opacity:1;transform:translateX(0)} }
+  @keyframes toastOut { to{opacity:0;transform:translateX(110%)} }
+  .toast-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: var(--bg2);
+    border: 1px solid rgba(212,168,32,0.3);
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: var(--shadow), var(--glow-gold);
+    transform: scale(0.9);
+    transition: transform 0.3s;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-overlay.open .modal-box { transform: scale(1); }
+  .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .modal-close {
+    background: none; border: none;
+    color: var(--gray-dim);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--white); }
+  .modal-lesson-title { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .meta-tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .meta-tag.xp { background: rgba(212,168,32,0.15); color: var(--gold); border: 1px solid rgba(212,168,32,0.3); }
+  .meta-tag.dur { background: rgba(83,74,183,0.15); color: var(--violet-bright); border: 1px solid rgba(83,74,183,0.3); }
+  .meta-tag.type { background: rgba(76,175,125,0.15); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
+  .modal-desc { font-size: 14px; color: var(--gray); line-height: 1.7; margin-bottom: 20px; }
+  .modal-resources { margin-bottom: 20px; }
+  .res-title { font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  .res-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; color: var(--gray); }
+  .res-icon { font-size: 16px; }
+  .modal-cta {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--violet), var(--gold-dim));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .modal-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(83,74,183,0.4); }
+
+  /* ── QUIZ COMPLETE ── */
+  .quiz-complete {
+    text-align: center;
+    padding: 40px 20px;
+    display: none;
+  }
+  .quiz-complete.show { display: block; animation: fadeIn 0.5s ease; }
+  .qc-emoji { font-size: 64px; margin-bottom: 16px; }
+  .qc-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
+  .qc-sub { font-size: 15px; color: var(--gray); margin-bottom: 24px; }
+  .qc-xp-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--violet), var(--gold-dim));
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 24px;
+    box-shadow: var(--glow-violet);
+  }
+  .qc-retry {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    padding: 12px 24px;
+    color: var(--gray);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .qc-retry:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero-top { gap: 14px; }
+    .avatar { width: 56px; height: 56px; font-size: 22px; }
+    .hero-stats { grid-template-columns: repeat(2,1fr); }
+    .tab-btn { font-size: 10px; padding: 8px 4px; }
+    .tab-icon { font-size: 16px; }
+    .badges-grid { grid-template-columns: repeat(2,1fr); }
+    .podium-item.p2, .podium-item.p3 { max-width: 120px; }
+    .quiz-stats { grid-template-columns: repeat(3,1fr); }
+    .crit-track { width: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Animated background -->
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Lesson Modal -->
+<div class="modal-overlay" id="lessonModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-lesson-title" id="modalTitle">Titre de la leçon</div>
+        <div style="font-size:12px;color:var(--gray-dim);" id="modalModule">Module</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="modal-desc" id="modalDesc"></div>
+    <div class="modal-resources">
+      <div class="res-title">Ressources incluses</div>
+      <div id="modalResources"></div>
+    </div>
+    <button class="modal-cta" id="modalCta" onclick="startLesson()">▶ Commencer la leçon</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-brand">Art-CreaVision® Academy</div>
+    <div class="header-title">Système de Progression</div>
+    <div class="header-sub">Là où naissent les créateurs de demain</div>
+  </div>
+
+  <!-- Hero Card -->
+  <div class="hero-card">
+    <div class="hero-top">
+      <div class="avatar">🎨</div>
+      <div class="hero-info">
+        <div class="hero-name">Soro Sekou</div>
+        <div class="hero-level">⚡ ARTISTE CONFIRMÉ — Niveau 7</div>
+        <div class="hero-badges-row">
+          <span class="badge-pill">🔥 Série 18j</span>
+          <span class="badge-pill">🏆 Top 4</span>
+          <span class="badge-pill">✅ 3 modules</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box">
+        <span class="stat-val">3 420</span>
+        <div class="stat-label">XP Total</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">18</span>
+        <div class="stat-label">Jours de série</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">68%</span>
+        <div class="stat-label">Progression</div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">7</span>
+        <div class="stat-label">Badges gagnés</div>
+      </div>
+    </div>
+    <div class="xp-section">
+      <div class="xp-header">
+        <span class="xp-label">XP vers Niveau 8</span>
+        <span class="xp-val">3 420 / 5 000 XP</span>
+      </div>
+      <div class="xp-track">
+        <div class="xp-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-wrap">
+    <button class="tab-btn active" onclick="switchTab('parcours', this)">
+      <span class="tab-icon">🗺️</span>Parcours
+    </button>
+    <button class="tab-btn" onclick="switchTab('modules', this)">
+      <span class="tab-icon">📚</span>Modules
+    </button>
+    <button class="tab-btn" onclick="switchTab('quiz', this)">
+      <span class="tab-icon">🧠</span>Quiz
+    </button>
+    <button class="tab-btn" onclick="switchTab('badges', this)">
+      <span class="tab-icon">🏆</span>Badges
+    </button>
+    <button class="tab-btn" onclick="switchTab('classement', this)">
+      <span class="tab-icon">👑</span>Classement
+    </button>
+    <button class="tab-btn" onclick="switchTab('certificat', this)">
+      <span class="tab-icon">🎓</span>Certificat
+    </button>
+  </div>
+
+  <!-- ═══ PANEL: PARCOURS ═══ -->
+  <div class="panel active" id="panel-parcours">
+    <div class="section-title">📅 Série Quotidienne — Juin 2025</div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+
+    <div class="section-title">⚡ Défis du Jour</div>
+    <div class="challenge-list">
+      <div class="challenge-item done" onclick="completeChallenge(this, 'Exercice complété !', 150)">
+        <div class="ch-icon">🖌️</div>
+        <div class="ch-info">
+          <div class="ch-name">Crée un prompt Midjourney</div>
+          <div class="ch-sub">Génère une image avec 5 modificateurs de style</div>
+        </div>
+        <div class="ch-xp done">✅ +150 XP</div>
+      </div>
+      <div class="challenge-item" onclick="completeChallenge(this, '+200 XP gagnés !', 200)">
+        <div class="ch-icon">🎬</div>
+        <div class="ch-info">
+          <div class="ch-name">Script Reels IA en 60s</div>
+          <div class="ch-sub">Rédige un script viral pour TikTok/Instagram</div>
+        </div>
+        <div class="ch-xp">+200 XP</div>
+      </div>
+      <div class="challenge-item" onclick="completeChallenge(this, 'Défi accompli ! Série maintenue !', 300)">
+        <div class="ch-icon">🏆</div>
+        <div class="ch-info">
+          <div class="ch-name">Défi Maître : Palette ACV®</div>
+          <div class="ch-sub">Reproduis la charte graphique complète en IA</div>
+        </div>
+        <div class="ch-xp">+300 XP</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL: MODULES ═══ -->
+  <div class="panel" id="panel-modules">
+    <div class="section-title">📚 Votre Parcours d'Apprentissage</div>
+    <div class="path-map" id="pathMap"></div>
+  </div>
+
+  <!-- ═══ PANEL: QUIZ ═══ -->
+  <div class="panel" id="panel-quiz">
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-progress-row">
+        <span class="quiz-q-num" id="quizQNum">Question 1 / 5</span>
+        <div class="quiz-track"><div class="quiz-fill" id="quizFill" style="width:20%"></div></div>
+        <div class="quiz-score-pill" id="quizScorePill">Score : 0</div>
+      </div>
+      <div class="quiz-question" id="quizQuestion"></div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <button class="quiz-next-btn" id="quizNextBtn" onclick="nextQuestion()">Question suivante →</button>
+    </div>
+
+    <div class="quiz-complete" id="quizComplete">
+      <div class="qc-emoji" id="qcEmoji">🏆</div>
+      <div class="qc-title" id="qcTitle">Quiz terminé !</div>
+      <div class="qc-sub" id="qcSub">Excellent travail !</div>
+      <div class="qc-xp-badge" id="qcXp">+0 XP</div>
+      <button class="qc-retry" onclick="resetQuiz()">↺ Recommencer</button>
+    </div>
+
+    <div class="section-title" style="margin-top:24px">📊 Mes Statistiques Quiz</div>
+    <div class="quiz-stats">
+      <div class="qstat-box">
+        <span class="qstat-val">87%</span>
+        <div class="qstat-label">Taux de réussite</div>
+      </div>
+      <div class="qstat-box">
+        <span class="qstat-val">24</span>
+        <div class="qstat-label">Quiz complétés</div>
+      </div>
+      <div class="qstat-box">
+        <span class="qstat-val">680</span>
+        <div class="qstat-label">XP Quiz total</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL: BADGES ═══ -->
+  <div class="panel" id="panel-badges">
+    <div class="section-title">🏆 Badges Gagnés <span style="color:var(--gray-dim);font-family:'DM Sans';font-size:13px;font-weight:400;letter-spacing:0">(7 / 14)</span></div>
+    <div class="badges-grid" id="badgesGrid"></div>
+  </div>
+
+  <!-- ═══ PANEL: CLASSEMENT ═══ -->
+  <div class="panel" id="panel-classement">
+    <div class="section-title">👑 Podium de la Semaine</div>
+    <div class="podium" id="podium"></div>
+    <div class="section-title">📋 Classement Général</div>
+    <div class="leaderboard-list" id="leaderboardList"></div>
+  </div>
+
+  <!-- ═══ PANEL: CERTIFICAT ═══ -->
+  <div class="panel" id="panel-certificat">
+    <div class="section-title">🎓 Votre Certificat</div>
+    <div class="cert-preview">
+      <div class="cert-seal">🏛️</div>
+      <div class="cert-brand">Art-CreaVision® Academy</div>
+      <div class="cert-title">Certificat de Maîtrise en<br>Intelligence Artificielle Créative</div>
+      <div class="cert-sub">Décerné avec distinction</div>
+      <div class="cert-name">Soro Sekou</div>
+      <div class="cert-criteria" id="certCriteria"></div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:20px;text-align:center;">
+      <div style="font-size:13px;color:var(--gray-dim);margin-bottom:16px;">Le certificat sera disponible à 100% de progression globale</div>
+      <div style="font-size:28px;font-family:'Cinzel',serif;font-weight:700;color:var(--gold);margin-bottom:4px;">68%</div>
+      <div style="font-size:13px;color:var(--gray-dim);">Progression actuelle</div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const MODULES_DATA = [
+  {
+    id: 1, title: "Fondamentaux de l'IA Créative", state: "done",
+    progress: 100, lessons: 6, duration: "2h30",
+    lessons_data: [
+      { name: "Introduction à l'IA Générative", type: "video", xp: 80, state: "done" },
+      { name: "Histoire et évolution des modèles", type: "video", xp: 80, state: "done" },
+      { name: "Comprendre les réseaux de neurones", type: "video", xp: 100, state: "done" },
+      { name: "Quiz : Bases de l'IA", type: "quiz", xp: 120, state: "done" },
+      { name: "Atelier : Exploration ComfyUI", type: "atelier", xp: 150, state: "done" },
+      { name: "Projet final Module 1", type: "atelier", xp: 200, state: "done" },
+    ]
+  },
+  {
+    id: 2, title: "Maîtrise du Prompting", state: "done",
+    progress: 100, lessons: 7, duration: "3h",
+    lessons_data: [
+      { name: "Anatomie d'un prompt parfait", type: "video", xp: 80, state: "done" },
+      { name: "Les 10 Prompts ACV® Pédagogiques", type: "video", xp: 100, state: "done" },
+      { name: "Prompts Maîtres : 50 secteurs", type: "video", xp: 120, state: "done" },
+      { name: "Style Transfer & Références", type: "atelier", xp: 150, state: "done" },
+      { name: "Quiz : Prompting Avancé", type: "quiz", xp: 120, state: "done" },
+      { name: "Midjourney vs Ideogram vs ComfyUI", type: "video", xp: 100, state: "done" },
+      { name: "Projet : 7 Tableaux IA", type: "atelier", xp: 200, state: "done" },
+    ]
+  },
+  {
+    id: 3, title: "Création & Monétisation", state: "done",
+    progress: 100, lessons: 6, duration: "2h45",
+    lessons_data: [
+      { name: "Construire sa marque créative", type: "video", xp: 80, state: "done" },
+      { name: "Shopify pour artistes IA", type: "video", xp: 100, state: "done" },
+      { name: "Stratégie TikTok & Reels IA", type: "video", xp: 100, state: "done" },
+      { name: "Ebooks & Produits Digitaux", type: "atelier", xp: 150, state: "done" },
+      { name: "Quiz : Monétisation", type: "quiz", xp: 120, state: "done" },
+      { name: "Projet : Lancer son premier produit", type: "atelier", xp: 250, state: "done" },
+    ]
+  },
+  {
+    id: 4, title: "Production Cinématique IA", state: "active",
+    progress: 55, lessons: 8, duration: "4h",
+    lessons_data: [
+      { name: "Storyboard & Direction Artistique", type: "video", xp: 80, state: "done" },
+      { name: "Mini-Films IA 8 secondes", type: "video", xp: 100, state: "done" },
+      { name: "Sound Design & Mastering FL Studio", type: "video", xp: 120, state: "done" },
+      { name: "Atelier : 30 Scènes Cinématiques", type: "atelier", xp: 200, state: "active" },
+      { name: "Voix & Narration IA", type: "video", xp: 100, state: "locked" },
+      { name: "Quiz : Production Vidéo IA", type: "quiz", xp: 120, state: "locked" },
+      { name: "Série Nouchi : Scènes de Vie", type: "atelier", xp: 200, state: "locked" },
+      { name: "Projet Final : Court-Métrage", type: "atelier", xp: 350, state: "locked" },
+    ]
+  },
+  {
+    id: 5, title: "Automatisation & Pipeline", state: "locked",
+    progress: 0, lessons: 6, duration: "3h30",
+    lessons_data: [
+      { name: "Introduction à n8n", type: "video", xp: 80, state: "locked" },
+      { name: "ACV® Pipeline Créatif Complet", type: "video", xp: 120, state: "locked" },
+      { name: "Claude + ComfyUI + Notion", type: "atelier", xp: 200, state: "locked" },
+      { name: "API Anthropic pour Créateurs", type: "video", xp: 100, state: "locked" },
+      { name: "Quiz : Automatisation", type: "quiz", xp: 120, state: "locked" },
+      { name: "Projet : Ton propre pipeline IA", type: "atelier", xp: 300, state: "locked" },
+    ]
+  },
+  {
+    id: 6, title: "Rayonnement & Influence", state: "locked",
+    progress: 0, lessons: 7, duration: "3h15",
+    lessons_data: [
+      { name: "Bâtir une audience africaine & internationale", type: "video", xp: 80, state: "locked" },
+      { name: "Autorité Digitale : La Masterclass", type: "video", xp: 120, state: "locked" },
+      { name: "Méthode P.C.C.O™", type: "video", xp: 100, state: "locked" },
+      { name: "Partenariats & Collaborations", type: "video", xp: 100, state: "locked" },
+      { name: "Quiz : Stratégie Digitale", type: "quiz", xp: 120, state: "locked" },
+      { name: "Atelier : Ton Plan de Lancement", type: "atelier", xp: 200, state: "locked" },
+      { name: "🎓 Certification Finale ACV®", type: "atelier", xp: 500, state: "locked" },
+    ]
+  },
+];
+
+const QUIZ_DATA = [
+  {
+    q: "Quel outil ACV® recommande principalement pour générer des images IA de haute qualité avec un contrôle total sur le processus ?",
+    opts: ["DALL-E 3", "ComfyUI", "Adobe Firefly", "Canva IA"],
+    correct: 1,
+    feedback: "✅ ComfyUI permet un contrôle total du pipeline de génération via des nodes personnalisables — c'est l'outil phare de la méthode ACV®."
+  },
+  {
+    q: "La palette ACV® utilise une couleur principale dorée. Quel est son code hexadécimal exact ?",
+    opts: ["#F5D876", "#D4A820", "#C8A000", "#E6C040"],
+    correct: 1,
+    feedback: "✅ #D4A820 est l'Or ACV® — la couleur signature de la marque Art-CreaVision®."
+  },
+  {
+    q: "Quelle est la tagline officielle d'Art-CreaVision® ?",
+    opts: ["créer · innover · rayonner", "créez · monétisez · rayonnez", "imaginer · créer · partager", "art · créativité · vision"],
+    correct: 1,
+    feedback: "✅ 'créez · monétisez · rayonnez' — la tagline ACV® résume les 3 piliers : création, revenus, impact."
+  },
+  {
+    q: "Dans la méthode P.C.C.O™, que signifie le 'C' central ?",
+    opts: ["Créativité", "Communication", "Contenu", "Conversion"],
+    correct: 2,
+    feedback: "✅ P.C.C.O™ = Positionnement, Contenu, Conversion, Optimisation — les 4 piliers de l'autorité digitale ACV®."
+  },
+  {
+    q: "Quel format de police est utilisé pour les titres de chapitre dans les documents ACV® ?",
+    opts: ["Playfair Display", "Cinzel", "Cormorant Garamond", "DM Sans"],
+    correct: 1,
+    feedback: "✅ Cinzel est la police d'excellence pour les titres ACV® — sa structure romaine incarne l'autorité et le prestige de la marque."
+  },
+];
+
+const BADGES_DATA = [
+  { name: "Pionnier IA", emoji: "🚀", cond: "Premier prompt créé", earned: true },
+  { name: "Artiste Digital", emoji: "🎨", cond: "10 images générées", earned: true },
+  { name: "Prompt Master", emoji: "⚡", cond: "Module 2 complété", earned: true },
+  { name: "Créateur Monétisé", emoji: "💰", cond: "Premier produit vendu", earned: true },
+  { name: "Sérieur", emoji: "🔥", cond: "Série de 14 jours", earned: true },
+  { name: "Quiz Champion", emoji: "🧠", cond: "5 quiz à 100%", earned: true },
+  { name: "Fondateur ACV®", emoji: "👑", cond: "Badge exclusif fondateur", earned: true },
+  { name: "Cinéaste IA", emoji: "🎬", cond: "Module 4 à compléter", earned: false },
+  { name: "Automatiseur", emoji: "🤖", cond: "Module 5 à débloquer", earned: false },
+  { name: "Influenceur IA", emoji: "📡", cond: "Module 6 à débloquer", earned: false },
+  { name: "Série Légendaire", emoji: "🌟", cond: "30 jours consécutifs", earned: false },
+  { name: "Certifié ACV®", emoji: "🏛️", cond: "100% de progression", earned: false },
+  { name: "Top 1 Classement", emoji: "🥇", cond: "Atteindre la 1ère place", earned: false },
+  { name: "Maître Complet", emoji: "💎", cond: "Tous les modules terminés", earned: false },
+];
+
+const LEADERBOARD_DATA = [
+  { name: "Aminata K.", emoji: "👩🏿", xp: 5240, trend: "▲", pos: 1 },
+  { name: "Kofi Mensah", emoji: "👨🏾", xp: 4980, trend: "▲", pos: 2 },
+  { name: "Fatoumata D.", emoji: "👩🏾", xp: 4450, trend: "▼", pos: 3 },
+  { name: "Soro Sekou", emoji: "🎨", xp: 3420, trend: "▲", pos: 4, isMe: true },
+  { name: "Oumar Traoré", emoji: "👨🏿", xp: 3100, trend: "—", pos: 5 },
+  { name: "Aicha Bamba", emoji: "👩🏾", xp: 2890, trend: "▲", pos: 6 },
+  { name: "Yao Kouassi", emoji: "👨🏾", xp: 2650, trend: "▼", pos: 7 },
+];
+
+const CERT_CRITERIA = [
+  { label: "Modules complétés", pct: 50 },
+  { label: "Quiz réussis", pct: 87 },
+  { label: "Jours de série", pct: 64 },
+  { label: "Projets soumis", pct: 75 },
+];
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let quizState = { current: 0, score: 0, answered: false };
+let expandedModules = { 4: true };
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildCalendar();
+  buildPathMap();
+  buildQuiz();
+  buildBadges();
+  buildPodium();
+  buildLeaderboard();
+  buildCertificate();
+  sendHeightToParent();
+});
+
+// Height communication for Wix iframe
+function sendHeightToParent() {
+  const h = document.body.scrollHeight;
+  window.parent.postMessage({ type: 'setHeight', height: h }, '*');
+  window.parent.postMessage(h, '*');
+  setTimeout(sendHeightToParent, 2000);
+}
+
+// ══════════════════════════════════════
+// TABS
+// ══════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(sendHeightToParent, 100);
+}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function showToast(msg, icon = '⚡') {
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span class="toast-icon">${icon}</span><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+// ══════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════
+function buildCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const pattern = ['done','done','done','missed','done','done','done','done','done','done','done','done','done','done','missed','done','done','done','today'];
+  for (let i = 0; i < 28; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day ' + (i < pattern.length ? pattern[i] : 'future');
+    d.textContent = i + 1;
+    if (d.classList.contains('today')) d.title = "Aujourd'hui";
+    grid.appendChild(d);
+  }
+}
+
+// ══════════════════════════════════════
+// CHALLENGES
+// ══════════════════════════════════════
+function completeChallenge(el, msg, xp) {
+  if (el.classList.contains('done')) return;
+  el.classList.add('done');
+  el.querySelector('.ch-xp').textContent = '✅ +' + xp + ' XP';
+  el.querySelector('.ch-xp').classList.add('done');
+  showToast(msg + ' +' + xp + ' XP !', '🏆');
+}
+
+// ══════════════════════════════════════
+// PATH MAP
+// ══════════════════════════════════════
+function buildPathMap() {
+  const wrap = document.getElementById('pathMap');
+  MODULES_DATA.forEach(mod => {
+    const el = document.createElement('div');
+    el.className = 'path-module ' + (mod.state === 'active' ? 'active-mod' : mod.state === 'locked' ? 'locked' : '');
+    const stateIcon = mod.state === 'done' ? '✅' : mod.state === 'active' ? '▶️' : '🔒';
+    const numClass = mod.state === 'done' ? 'done' : mod.state === 'active' ? 'active' : 'locked';
+    const isExpanded = expandedModules[mod.id] || false;
+
+    el.innerHTML = `
+      <div class="path-module-header" onclick="toggleModule(${mod.id}, this)">
+        <div class="mod-num ${numClass}">${mod.id}</div>
+        <div class="mod-info">
+          <div class="mod-title">${mod.title}</div>
+          <div class="mod-meta">${mod.lessons} leçons · ${mod.duration}
+            ${mod.state === 'active' ? ` · <span style="color:var(--gold)">${mod.progress}% complété</span>` : ''}
+          </div>
+          ${mod.state !== 'locked' ? `
+          <div class="mod-prog-wrap">
+            <div class="mod-prog-track">
+              <div class="mod-prog-fill" style="width:${mod.progress}%"></div>
+            </div>
+          </div>` : ''}
+        </div>
+        <div class="mod-status">${stateIcon}</div>
+      </div>
+      <div class="lessons-list" id="lessons-${mod.id}" style="display:${isExpanded?'flex':'none'}">
+        ${mod.lessons_data.map(l => `
+          <div class="lesson-item ${l.state === 'done' ? 'done-lesson' : ''}"
+               onclick="${l.state !== 'locked' ? `openLesson('${l.name.replace(/'/g,"\\'")}','${mod.title}','${l.type}',${l.xp},'${l.state}')` : ''}">
+            <div class="lesson-dot ${l.state}"></div>
+            <div class="lesson-name">${l.name}</div>
+            <span class="lesson-type ${l.type}">${l.type}</span>
+            <div class="lesson-xp">+${l.xp}XP</div>
+          </div>`).join('')}
+      </div>
+    `;
+    wrap.appendChild(el);
+  });
+}
+
+function toggleModule(id, headerEl) {
+  const list = document.getElementById('lessons-' + id);
+  const isOpen = list.style.display !== 'none';
+  list.style.display = isOpen ? 'none' : 'flex';
+  expandedModules[id] = !isOpen;
+  setTimeout(sendHeightToParent, 200);
+}
+
+// ══════════════════════════════════════
+// MODAL LESSON
+// ══════════════════════════════════════
+const LESSON_DESCS = {
+  'video': "Cette vidéo interactive vous plonge dans les concepts fondamentaux avec des exemples concrets tirés de projets ACV® réels. Chaque segment comprend des exercices pratiques guidés.",
+  'quiz': "Testez vos connaissances avec ce quiz adaptatif. Les questions évoluent selon votre niveau et couvrent l'ensemble des concepts du module en cours.",
+  'atelier': "Un atelier pratique guidé pas-à-pas. Vous créerez un livrable concret à la fin de la session, directement réutilisable dans vos projets professionnels."
+};
+
+function openLesson(name, module, type, xp, state) {
+  if (state === 'locked') { showToast('🔒 Terminez les étapes précédentes pour débloquer !', '🔒'); return; }
+  document.getElementById('modalTitle').textContent = name;
+  document.getElementById('modalModule').textContent = module;
+  document.getElementById('modalMeta').innerHTML = `
+    <span class="meta-tag xp">+${xp} XP</span>
+    <span class="meta-tag dur">${type === 'video' ? '18 min' : type === 'quiz' ? '10 min' : '35 min'}</span>
+    <span class="meta-tag type">${type}</span>
+  `;
+  document.getElementById('modalDesc').textContent = LESSON_DESCS[type] || '';
+  document.getElementById('modalResources').innerHTML = [
+    { icon: '📄', label: 'Fiche récapitulative PDF' },
+    { icon: '🎨', label: 'Templates & ressources graphiques' },
+    { icon: '💬', label: 'Forum de discussion dédié' },
+  ].map(r => `<div class="res-item"><span class="res-icon">${r.icon}</span><span>${r.label}</span></div>`).join('');
+  const cta = document.getElementById('modalCta');
+  cta.textContent = state === 'done' ? '↺ Revoir la leçon' : '▶ Commencer la leçon';
+  document.getElementById('lessonModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('lessonModal').classList.remove('open'); }
+function startLesson() { showToast('Leçon lancée ! Bonne étude 🎓', '▶'); closeModal(); }
+
+document.getElementById('lessonModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ══════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════
+function buildQuiz() {
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUIZ_DATA[quizState.current];
+  document.getElementById('quizQNum').textContent = `Question ${quizState.current + 1} / ${QUIZ_DATA.length}`;
+  document.getElementById('quizFill').style.width = ((quizState.current + 1) / QUIZ_DATA.length * 100) + '%';
+  document.getElementById('quizScorePill').textContent = `Score : ${quizState.score}`;
+  document.getElementById('quizQuestion').textContent = q.q;
+  document.getElementById('quizFeedback').className = 'quiz-feedback';
+  document.getElementById('quizNextBtn').className = 'quiz-next-btn';
+  quizState.answered = false;
+
+  const opts = document.getElementById('quizOptions');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function answerQuiz(idx, btn) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+  const q = QUIZ_DATA[quizState.current];
+  const fb = document.getElementById('quizFeedback');
+  const allBtns = document.querySelectorAll('.quiz-opt');
+  allBtns.forEach(b => b.disabled = true);
+  allBtns[q.correct].classList.add('correct');
+
+  if (idx === q.correct) {
+    quizState.score += 100;
+    btn.classList.add('correct');
+    fb.textContent = q.feedback;
+    fb.className = 'quiz-feedback show correct';
+    showToast('+100 XP — Bonne réponse ! 🎯', '✅');
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = '❌ ' + q.feedback;
+    fb.className = 'quiz-feedback show wrong';
+    showToast('Mauvaise réponse. Réessaie !', '❌');
+  }
+
+  const nextBtn = document.getElementById('quizNextBtn');
+  nextBtn.className = 'quiz-next-btn show';
+  nextBtn.textContent = quizState.current < QUIZ_DATA.length - 1 ? 'Question suivante →' : 'Voir mes résultats 🏆';
+}
+
+function nextQuestion() {
+  quizState.current++;
+  if (quizState.current >= QUIZ_DATA.length) {
+    showQuizComplete();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showQuizComplete() {
+  document.getElementById('quizCard').style.display = 'none';
+  const complete = document.getElementById('quizComplete');
+  complete.classList.add('show');
+  const pct = Math.round(quizState.score / (QUIZ_DATA.length * 100) * 100);
+  const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🌟' : pct >= 60 ? '👍' : '💪';
+  const msg = pct === 100 ? 'Score parfait ! Maîtrise absolue !' : pct >= 80 ? 'Excellent résultat !' : pct >= 60 ? 'Bon travail, continue !' : 'Continue à t\'entraîner !';
+  document.getElementById('qcEmoji').textContent = emoji;
+  document.getElementById('qcTitle').textContent = msg;
+  document.getElementById('qcSub').textContent = `${pct}% de bonnes réponses — ${quizState.score} points`;
+  document.getElementById('qcXp').textContent = `+${quizState.score} XP gagnés !`;
+  showToast(`Quiz terminé ! +${quizState.score} XP`, '🏆');
+  setTimeout(sendHeightToParent, 100);
+}
+
+function resetQuiz() {
+  quizState = { current: 0, score: 0, answered: false };
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('quizComplete').classList.remove('show');
+  renderQuestion();
+}
+
+// ══════════════════════════════════════
+// BADGES
+// ══════════════════════════════════════
+function buildBadges() {
+  const grid = document.getElementById('badgesGrid');
+  BADGES_DATA.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'badge-card ' + (b.earned ? 'earned' : 'locked-badge');
+    el.innerHTML = `
+      ${b.earned ? '<div class="badge-earned-tag">GAGNÉ</div>' : ''}
+      <span class="badge-emoji">${b.emoji}</span>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-cond">${b.cond}</div>
+      ${!b.earned ? '<div class="badge-locked-overlay">🔒</div>' : ''}
+    `;
+    if (b.earned) el.onclick = () => showToast(`Badge "${b.name}" — ${b.cond}`, b.emoji);
+    grid.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════
+function buildPodium() {
+  const podium = document.getElementById('podium');
+  const top3 = LEADERBOARD_DATA.slice(0,3);
+  const order = [top3[1], top3[0], top3[2]]; // 2nd, 1st, 3rd visually
+  const classes = ['p2','p1','p3'];
+  const colors = ['#C0C0C0','#D4A820','#CD7F32'];
+
+  order.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'podium-item ' + classes[i];
+    div.innerHTML = `
+      <div class="podium-avatar" style="background:linear-gradient(135deg,var(--violet),${colors[i]})">
+        ${classes[i] === 'p1' ? '<div class="crown">👑</div>' : ''}
+        ${p.emoji}
+      </div>
+      <div class="podium-name">${p.name}</div>
+      <div class="podium-xp">${p.xp.toLocaleString()} XP</div>
+      <div class="podium-bar"><div class="podium-rank">${p.pos}</div></div>
+    `;
+    podium.appendChild(div);
+  });
+}
+
+function buildLeaderboard() {
+  const list = document.getElementById('leaderboardList');
+  LEADERBOARD_DATA.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'lb-row' + (p.isMe ? ' me' : '');
+    div.innerHTML = `
+      <div class="lb-pos ${p.pos <= 3 ? 'top' : ''}">${p.pos}</div>
+      <div class="lb-av" style="background:linear-gradient(135deg,var(--violet),var(--gold-dim))">${p.emoji}</div>
+      <div class="lb-name">${p.name} ${p.isMe ? '<span class="lb-me-tag">MOI</span>' : ''}</div>
+      <div class="lb-xp">${p.xp.toLocaleString()} XP</div>
+      <div class="lb-trend" style="color:${p.trend==='▲'?'var(--green)':p.trend==='▼'?'var(--red)':'var(--gray-dim)'}">${p.trend}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════
+// CERTIFICATE
+// ══════════════════════════════════════
+function buildCertificate() {
+  const wrap = document.getElementById('certCriteria');
+  CERT_CRITERIA.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'crit-row';
+    div.innerHTML = `
+      <div class="crit-label">${c.label}</div>
+      <div class="crit-track"><div class="crit-fill" style="width:${c.pct}%"></div></div>
+      <div class="crit-pct">${c.pct}%</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+// ── Window resize ──
+window.addEventListener('resize', sendHeightToParent);
+</script>
+</body>
+</html>
