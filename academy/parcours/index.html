@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcours complet — ART-CREAVISION® ACADEMY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+:root{
+  --bg:#262626; --bg-deep:#1d1d1d; --panel:#363636; --panel-2:#2c2c2c;
+  --gold:#D4A820; --gold-soft:#e6c05a; --white:#FFFFFF; --body:#CCCCCC; --muted:#9a9a9a;
+  --border:rgba(212,168,32,0.24); --border-soft:rgba(255,255,255,0.08);
+  --ok:#93ac70; --warn:#cf9a52; --bad:#bd7264;
+}
+*{box-sizing:border-box;}
+html{background:var(--bg);}
+body{background:var(--bg);color:var(--body);font-family:'DM Sans',ui-sans-serif,system-ui,sans-serif;margin:0;line-height:1.65;}
+::selection{background:var(--gold);color:#1a1a1a;}
+h1,h2,h3,h4{text-wrap:balance;margin:0;}
+a{color:var(--gold-soft);}
+img{max-width:100%;}
+
+.wrap{max-width:960px;margin:0 auto;padding:0 clamp(1.1rem,4vw,2rem);}
+
+/* ---- hero ---- */
+.hero{padding:3.4rem 0 2.6rem;text-align:center;border-bottom:1px solid var(--border-soft);
+  background:radial-gradient(900px 260px at 50% -30%, rgba(212,168,32,0.12), transparent 60%), var(--bg);}
+.hero .eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+.hero h1{font-family:'Cinzel',serif;color:var(--white);font-weight:600;font-size:clamp(1.7rem,4vw,2.6rem);margin-top:.7rem;line-height:1.25;}
+.hero h1 em{font-style:normal;color:var(--gold);}
+.hero p.sub{margin:1rem auto 0;max-width:56ch;color:var(--muted);font-size:1.02rem;}
+.hero .founder{margin-top:1.6rem;font-size:.85rem;color:var(--muted);}
+.hero .founder strong{color:var(--body);font-weight:600;}
+
+/* ---- cohort banner ---- */
+.cohort{background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  text-align:center;padding:.85rem 1rem;font-size:.86rem;color:var(--gold-soft);font-weight:600;letter-spacing:.01em;}
+
+/* ---- section ---- */
+section{padding:2.8rem 0;border-bottom:1px solid var(--border-soft);}
+section:last-of-type{border-bottom:none;}
+.section-label{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.9rem;text-align:center;}
+h2.section-title{font-family:'Cormorant Garamond',Georgia,serif;color:var(--white);font-weight:600;font-size:1.9rem;text-align:center;margin-bottom:1.8rem;}
+
+/* ---- modules grid ---- */
+.modules{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.9rem;}
+.module-card{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:10px;padding:1rem 1.1rem;display:flex;gap:.8rem;align-items:flex-start;}
+.module-card .num{font-family:'Cinzel',serif;color:var(--gold);font-weight:600;font-size:.95rem;flex:none;width:1.6rem;}
+.module-card .txt h4{font-family:'Cormorant Garamond',serif;color:var(--white);font-size:1.08rem;font-weight:600;margin-bottom:.15rem;}
+.module-card .txt p{margin:0;font-size:.82rem;color:var(--muted);}
+.module-card.free{border-color:rgba(212,168,32,.45);}
+.module-card.free .tag{display:inline-block;margin-top:.3rem;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--gold);background:rgba(212,168,32,.1);border:1px solid var(--border);border-radius:999px;padding:.15rem .5rem;}
+
+/* ---- includes ---- */
+.includes{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;margin-top:1.6rem;}
+.includes span{font-size:.86rem;color:var(--body);background:var(--panel-2);border:1px solid var(--border-soft);border-radius:999px;padding:.5rem 1rem;}
+.includes span b{color:var(--gold-soft);}
+
+/* ---- pricing ---- */
+.price-card{max-width:460px;margin:0 auto;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:2.2rem clamp(1.3rem,4vw,2.4rem);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+.price-card .badge{display:inline-block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--bg);background:var(--gold);border-radius:999px;padding:.3rem .8rem;margin-bottom:1.1rem;}
+.price-card .old{font-size:1.05rem;color:var(--muted);text-decoration:line-through;text-decoration-color:var(--bad);}
+.price-card .new{font-family:'Cinzel',serif;color:var(--white);font-size:clamp(2.1rem,6vw,2.7rem);font-weight:600;margin:.25rem 0 .1rem;}
+.price-card .new em{font-style:normal;color:var(--gold);}
+.price-card .per{font-size:.82rem;color:var(--muted);margin-bottom:1.4rem;}
+.price-card ul{list-style:none;margin:0 0 1.6rem;padding:0;text-align:left;display:flex;flex-direction:column;gap:.55rem;}
+.price-card ul li{display:flex;gap:.6rem;align-items:flex-start;font-size:.9rem;color:var(--body);}
+.price-card ul li::before{content:"✓";color:var(--ok);font-weight:700;flex:none;}
+.cta{display:inline-block;width:100%;text-align:center;background:var(--gold);color:#1a1a1a;font-weight:700;font-size:.98rem;text-decoration:none;padding:.95rem 1.4rem;border-radius:10px;transition:background .15s;}
+.cta:hover{background:var(--gold-soft);}
+.price-card .note{margin-top:.9rem;font-size:.78rem;color:var(--muted);}
+
+/* ---- founder ---- */
+.founder-block{display:flex;gap:1.4rem;align-items:flex-start;background:var(--panel-2);border:1px solid var(--border-soft);border-radius:12px;padding:1.6rem clamp(1.1rem,3vw,1.8rem);}
+.founder-block .avatar{flex:none;width:56px;height:56px;border-radius:999px;background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 60%, #8a6b17);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;color:#1a1a1a;font-weight:700;font-size:1.1rem;}
+.founder-block h4{font-family:'Cormorant Garamond',serif;color:var(--white);font-size:1.25rem;font-weight:600;margin-bottom:.35rem;}
+.founder-block p{margin:0;font-size:.9rem;color:var(--body);}
+
+/* ---- faq ---- */
+.faq-item{border-bottom:1px solid var(--border-soft);padding:1.1rem 0;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item h4{font-family:'Cormorant Garamond',serif;color:var(--white);font-size:1.12rem;font-weight:600;margin-bottom:.4rem;}
+.faq-item p{margin:0;font-size:.88rem;color:var(--muted);}
+
+/* ---- final cta ---- */
+.final-cta{text-align:center;padding:3rem 0 3.4rem;}
+.final-cta h2{font-family:'Cinzel',serif;color:var(--white);font-size:clamp(1.4rem,3.4vw,1.9rem);font-weight:600;margin-bottom:.8rem;}
+.final-cta p{color:var(--muted);max-width:50ch;margin:0 auto 1.6rem;font-size:.94rem;}
+.final-cta .cta{max-width:340px;margin:0 auto;}
+
+@media (max-width:640px){
+  .founder-block{flex-direction:column;align-items:center;text-align:center;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">ART-CREAVISION® ACADEMY</div>
+    <h1>Maîtrisez l'IA générative <em>pour la création</em></h1>
+    <p class="sub">Un parcours complet en 12 modules, conçu pour les créateurs, formateurs et entrepreneurs africains qui veulent utiliser l'IA générative avec méthode — sans jargon technique, avec un cadre de responsabilité clair à chaque étape.</p>
+    <div class="founder">Conçu par <strong>Soro Sékou</strong>, fondateur d'ART-CREAVISION® AI STUDIO</div>
+  </div>
+</div>
+
+<div class="cohort">🎓 Cohorte fondatrice — tarif de lancement réservé aux 100 premières inscriptions</div>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">Le parcours</div>
+    <h2 class="section-title">12 modules, un fil conducteur</h2>
+    <div class="modules">
+      <div class="module-card free">
+        <div class="num">01</div>
+        <div class="txt">
+          <h4>Fondations de l'IA générative</h4>
+          <p>Comprendre avant de créer : vocabulaire, hallucinations, droits d'usage.</p>
+          <span class="tag">Gratuit — essayez maintenant</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="num">02</div>
+        <div class="txt"><h4>Veille &amp; outils</h4><p>Cartographier et choisir les bons outils selon vos besoins réels.</p></div>
+      </div>
+      <div class="module-card">
+        <div class="num">03</div>
+        <div class="txt"><h4>Méthode ACV-PROMPT™</h4><p>Structurer un prompt professionnel, reproductible, précis.</p></div>
+      </div>
+      <div class="module-card">
+        <div class="num">04</div>
+        <div class="txt"><h4>Image &amp; identité visuelle</h4><p>Générer des visuels cohérents avec une direction artistique.</p></div>
+      </div>
+      <div class="module-card">
+        <div class="num">05</div>
+        <div class="txt"><h4>Direction artistique par l'IA</h4><p>Jugement créatif : ce que l'IA ne remplace pas.</p></div>
+      </div>
+      <div class="module-card">
+        <div class="num">…</div>
+        <div class="txt"><h4>Modules 6 à 12</h4><p>Audio, vidéo, branding, e-commerce, franchises culturelles africaines et projet final certifiant.</p></div>
+      </div>
+    </div>
+    <div class="includes">
+      <span><b>XP &amp; badges</b> à chaque module</span>
+      <span><b>Streak</b> de progression</span>
+      <span><b>Classement</b> local</span>
+      <span><b>Certificat</b> ART-CREAVISION® à la fin du parcours</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">Offre de lancement</div>
+    <h2 class="section-title">Un accès à vie, un seul paiement</h2>
+    <div class="price-card">
+      <span class="badge">Tarif cohorte fondatrice</span>
+      <div class="old">Valeur du parcours : 90 000 FCFA</div>
+      <div class="new"><em>25 000</em> FCFA</div>
+      <div class="per">Paiement unique · accès à vie · pas d'abonnement</div>
+      <ul>
+        <li>Les 12 modules, du niveau débutant au projet final</li>
+        <li>Suivi de progression, XP, badges et classement</li>
+        <li>Certificat ART-CREAVISION® à l'issue du parcours</li>
+        <li>Mises à jour de contenu incluses</li>
+      </ul>
+      <a class="cta" href="mailto:artcreavision01@gmail.com?subject=Inscription%20%E2%80%94%20Cohorte%20fondatrice%20ACADEMY&amp;body=Bonjour%2C%0A%0AJe%20souhaite%20rejoindre%20la%20cohorte%20fondatrice%20du%20parcours%20complet%20ART-CREAVISION%C2%AE%20ACADEMY%20(tarif%20de%20lancement%2025%20000%20FCFA).%0A%0ANom%20%3A%20%0AT%C3%A9l%C3%A9phone%20%2F%20WhatsApp%20%3A%20%0A%0AMerci%20!">Rejoindre la cohorte fondatrice</a>
+      <div class="note">Tarif de lancement réservé aux 100 premières inscriptions, puis retour au tarif normal de 45 000 FCFA.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">À propos</div>
+    <h2 class="section-title">Pourquoi ce parcours existe</h2>
+    <div class="founder-block">
+      <div class="avatar">SS</div>
+      <div>
+        <h4>Soro Sékou — ART-CREAVISION® AI STUDIO</h4>
+        <p>ART-CREAVISION® ACADEMY est né d'un constat simple : la plupart des formations à l'IA générative sont soit trop techniques, soit trop génériques pour un public de créateurs africains. Ce parcours a été conçu pour combler cet écart — avec un cadre de responsabilité clair, un vocabulaire commun, et une attention particulière à la fidélité culturelle des représentations générées, un point rarement traité ailleurs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">Questions fréquentes</div>
+    <h2 class="section-title">Avant de vous inscrire</h2>
+    <div class="faq-item">
+      <h4>Dois-je déjà savoir utiliser l'IA ?</h4>
+      <p>Non. Le Module 1 ne suppose aucun prérequis technique — il pose les bases avant tout usage d'outil.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Le tarif de lancement est-il limité dans le temps ?</h4>
+      <p>Il est réservé aux 100 premières inscriptions de la cohorte fondatrice. Une fois ce seuil atteint, le tarif normal (45 000 FCFA) s'applique.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Puis-je essayer avant d'acheter ?</h4>
+      <p>Oui — le Module 1 est intégralement gratuit et accessible sans engagement, juste au-dessus sur cette page.</p>
+    </div>
+  </div>
+</section>
+
+<div class="final-cta">
+  <div class="wrap">
+    <h2>Prêt à structurer votre pratique de l'IA générative ?</h2>
+    <p>Rejoignez la cohorte fondatrice au tarif de lancement, avant qu'il ne remonte à 45 000 FCFA.</p>
+    <a class="cta" id="inscription" href="mailto:artcreavision01@gmail.com?subject=Inscription%20%E2%80%94%20Cohorte%20fondatrice%20ACADEMY&amp;body=Bonjour%2C%0A%0AJe%20souhaite%20rejoindre%20la%20cohorte%20fondatrice%20du%20parcours%20complet%20ART-CREAVISION%C2%AE%20ACADEMY%20(tarif%20de%20lancement%2025%20000%20FCFA).%0A%0ANom%20%3A%20%0AT%C3%A9l%C3%A9phone%20%2F%20WhatsApp%20%3A%20%0A%0AMerci%20!">Rejoindre la cohorte fondatrice — 25 000 FCFA</a>
+  </div>
+</div>
+
+</body>
+</html>
