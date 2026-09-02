@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1 — Fondations de l'IA générative</title>
+<meta name="description" content="ART-CREAVISION® ACADEMY — Module 1 : Fondations de l'IA générative. Support de lecture complet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+:root{
+  --bg:#262626; --bg-deep:#1d1d1d; --panel:#363636; --panel-2:#2c2c2c;
+  --gold:#D4A820; --gold-soft:#e6c05a; --white:#FFFFFF; --body:#CCCCCC; --muted:#9a9a9a;
+  --border:rgba(212,168,32,0.24); --border-soft:rgba(255,255,255,0.08);
+  --ok:#93ac70; --warn:#cf9a52; --bad:#bd7264;
+}
+*{box-sizing:border-box;}
+html{background:var(--bg);}
+body{background:var(--bg);color:var(--body);font-family:'DM Sans',ui-sans-serif,system-ui,sans-serif;margin:0;line-height:1.65;}
+::selection{background:var(--gold);color:#1a1a1a;}
+h1,h2,h3,h4{text-wrap:balance;margin:0;}
+.chapter-num{font-family:'Cinzel',serif;color:var(--gold);font-weight:600;}
+h2.section-title{font-family:'Cormorant Garamond',Georgia,serif;color:var(--white);font-weight:600;font-size:2.1rem;letter-spacing:0.01em;}
+h3.sub-title{font-family:'Cormorant Garamond',Georgia,serif;color:var(--white);font-weight:600;font-size:1.5rem;margin-bottom:.6rem;}
+h4.mini-title{font-family:'Cormorant Garamond',Georgia,serif;color:var(--gold-soft);font-weight:600;font-size:1.15rem;margin:0 0 .4rem;}
+a{color:var(--gold-soft);}
+.shell{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1280px;margin:0 auto;}
+header.masthead{grid-column:1/-1;padding:2.6rem clamp(1.25rem,4vw,3rem) 2rem;border-bottom:1px solid var(--border);
+  background:radial-gradient(1200px 300px at 15% -40%, rgba(212,168,32,0.10), transparent 60%), var(--bg);}
+.eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+.masthead h1{font-family:'Cinzel',serif;color:var(--white);font-weight:600;font-size:clamp(1.5rem,3.2vw,2.35rem);margin-top:.55rem;line-height:1.25;}
+.masthead h1 em{font-style:normal;color:var(--gold);}
+.masthead .sub{margin-top:.75rem;color:var(--muted);font-size:.98rem;max-width:66ch;}
+.masthead .meta{margin-top:1.4rem;display:flex;gap:1.6rem;flex-wrap:wrap;font-size:.82rem;color:var(--muted);}
+.masthead .meta strong{color:var(--body);font-weight:500;}
+nav.toc{border-right:1px solid var(--border-soft);padding:2rem 1.1rem 3rem;align-self:start;position:sticky;top:0;max-height:100vh;overflow-y:auto;}
+nav.toc .toc-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem;font-weight:700;}
+nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc;}
+nav.toc li{counter-increment:toc;}
+nav.toc a{display:flex;gap:.55rem;align-items:baseline;text-decoration:none;color:var(--body);font-size:.85rem;padding:.4rem .4rem;border-radius:6px;transition:background .15s,color .15s;}
+nav.toc a:hover{background:var(--panel);color:var(--white);}
+nav.toc a::before{content:counter(toc,decimal-leading-zero);font-size:.7rem;color:var(--gold);font-variant-numeric:tabular-nums;flex:none;}
+nav.toc .toc-sep{margin:1.1rem 0;border:0;border-top:1px solid var(--border-soft);}
+main{padding:2.6rem clamp(1.25rem,4vw,3.2rem) 6rem;min-width:0;}
+section{padding-top:2.6rem;margin-top:2.6rem;border-top:1px solid var(--border-soft);scroll-margin-top:1.5rem;}
+section:first-of-type{border-top:none;margin-top:1rem;padding-top:0;}
+.section-head{display:flex;gap:1.1rem;align-items:baseline;margin-bottom:1.3rem;}
+.section-head .chapter-num{font-size:2rem;line-height:1;}
+p{margin:0 0 1rem;max-width:74ch;}
+p:last-child{margin-bottom:0;}
+.callout{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1.3rem 1.5rem;margin:1.3rem 0;}
+.callout .callout-label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.5rem;}
+.callout p{max-width:none;}
+.callout.legal{border-color:rgba(207,154,82,.4);}
+.callout.legal .callout-label{color:var(--warn);}
+.tag{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:.24rem .55rem;border-radius:999px;border:1px solid transparent;white-space:nowrap;}
+.tag.ok{color:var(--ok);border-color:rgba(147,172,112,.4);background:rgba(147,172,112,.08);}
+.tag.warn{color:var(--warn);border-color:rgba(207,154,82,.4);background:rgba(207,154,82,.08);}
+.tag.bad{color:var(--bad);border-color:rgba(189,114,100,.4);background:rgba(189,114,100,.08);}
+.tag.gold{color:var(--gold);border-color:var(--border);background:rgba(212,168,32,.08);}
+.stack{display:flex;flex-direction:column;gap:.9rem;margin:1.1rem 0;}
+.item{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:10px;padding:1rem 1.15rem;}
+.item-head{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;margin-bottom:.4rem;flex-wrap:wrap;}
+.item-head h4{font-family:'Cormorant Garamond',serif;color:var(--white);font-size:1.15rem;font-weight:600;}
+.item p{font-size:.93rem;margin:0;color:var(--body);max-width:none;}
+ul.checklist{list-style:none;margin:1rem 0;padding:0;display:flex;flex-direction:column;gap:.55rem;}
+ul.checklist li{display:flex;gap:.7rem;align-items:flex-start;font-size:.94rem;padding:.55rem .75rem;background:var(--panel-2);border-radius:8px;border:1px solid var(--border-soft);}
+ul.checklist li::before{content:"";flex:none;width:15px;height:15px;margin-top:.18rem;border-radius:4px;border:1.5px solid var(--gold);background:transparent;}
+ul.checklist li b{color:var(--white);font-weight:600;}
+.table-wrap{overflow-x:auto;margin:1.3rem 0;border:1px solid var(--border-soft);border-radius:10px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:520px;}
+thead th{text-align:left;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);background:var(--panel-2);padding:.75rem .9rem;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody td{padding:.75rem .9rem;border-bottom:1px solid var(--border-soft);vertical-align:top;color:var(--body);}
+tbody tr:last-child td{border-bottom:none;}
+td.num,th.num{font-variant-numeric:tabular-nums;color:var(--muted);}
+td strong,table strong{color:var(--white);font-weight:600;}
+footer{border-top:1px solid var(--border-soft);padding:2rem clamp(1.25rem,4vw,3.2rem) 3rem;font-size:.8rem;color:var(--muted);grid-column:1/-1;}
+footer .brand{color:var(--gold);font-family:'Cinzel',serif;letter-spacing:.04em;}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr;}
+  nav.toc{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border-soft);padding:1.2rem 1.25rem;}
+  nav.toc ol{display:flex;flex-wrap:wrap;gap:.3rem;}
+  nav.toc li{flex:none;}
+  nav.toc .toc-sep{display:none;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+/* ---- module-specific components ---- */
+.lesson{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:12px;padding:1.6rem clamp(1.1rem,3vw,1.8rem);margin:1.6rem 0;}
+.lesson-eyebrow{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.35rem;}
+.lesson h3{font-family:'Cormorant Garamond',serif;color:var(--white);font-weight:600;font-size:1.7rem;margin-bottom:1rem;}
+.prompt-block{background:var(--bg-deep);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:.9rem 1.1rem;margin:.9rem 0;font-size:.9rem;}
+.prompt-block .p-label{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.4rem;}
+.prompt-block em{color:var(--white);font-style:normal;font-family:'Cormorant Garamond',serif;font-size:1.05rem;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+@media (max-width:700px){.two-col{grid-template-columns:1fr;}}
+.quiz-item{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:10px;padding:1rem 1.2rem;margin-bottom:.8rem;}
+.quiz-item .q{color:var(--white);font-weight:600;margin-bottom:.5rem;font-size:.96rem;}
+.quiz-item ol{margin:0;padding-left:1.2rem;font-size:.9rem;}
+.quiz-item ol li{margin-bottom:.25rem;}
+.quiz-answer{display:flex;gap:.6rem;align-items:baseline;font-size:.9rem;padding:.5rem .75rem;border-radius:8px;background:rgba(147,172,112,.07);border:1px solid rgba(147,172,112,.25);margin-bottom:.55rem;}
+.quiz-answer b{color:var(--ok);flex:none;}
+.rubric td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--gold-soft);font-weight:600;white-space:nowrap;}
+.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.2rem 0;}
+@media (max-width:800px){.sheet-grid{grid-template-columns:1fr;}}
+.sheet{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:12px;padding:1.4rem 1.5rem;}
+.sheet .sheet-label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.7rem;}
+.sheet h4{font-family:'Cormorant Garamond',serif;color:var(--white);font-size:1.3rem;font-weight:600;margin-bottom:.7rem;}
+.sheet ul{margin:0 0 .8rem;padding-left:1.1rem;font-size:.88rem;}
+.sheet ul li{margin-bottom:.35rem;}
+.glossary dt{color:var(--gold-soft);font-weight:600;font-family:'DM Sans',sans-serif;margin-top:.7rem;}
+.glossary dd{margin:.15rem 0 0;font-size:.92rem;}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header class="masthead">
+    <div class="eyebrow">ART-CREAVISION® ACADEMY — Maîtriser l'IA générative pour la création™</div>
+    <h1>Module 1 — Fondations de l'IA <em>générative</em></h1>
+    <p class="sub">Niveau 1 · COMPRENDRE — Premier module du parcours. Aucun outil n'est manipulé ici : ce module pose le socle conceptuel, le vocabulaire commun et le cadre de responsabilité sur lesquels reposent les 11 modules suivants.</p>
+    <div class="meta">
+      <span>Leçons&nbsp;: <strong>3</strong></span>
+      <span>Durée indicative&nbsp;: <strong>3 à 4&nbsp;h</strong></span>
+      <span>Prérequis&nbsp;: <strong>Aucun</strong></span>
+      <span>Statut&nbsp;: <strong>Version 1 — soumis à contrôle qualité</strong></span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-label">Sommaire</div>
+    <ol>
+      <li><a href="#objectifs">Objectifs pédagogiques</a></li>
+      <li><a href="#competences">Compétences acquises</a></li>
+      <li><a href="#prerequis">Prérequis</a></li>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#lecon1">Leçon 1.1</a></li>
+      <li><a href="#lecon2">Leçon 1.2</a></li>
+      <li><a href="#lecon3">Leçon 1.3</a></li>
+      <li><a href="#exercice">Exercice pratique</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#travail">Travail pratique</a></li>
+      <li><a href="#projet">Projet du module</a></li>
+      <li><a href="#defi">Défi supplémentaire</a></li>
+      <li><a href="#ressources">Ressources</a></li>
+      <li><a href="#fiches">Fiches formateur &amp; étudiant</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="objectifs">
+      <div class="section-head"><span class="chapter-num">01</span><h2 class="section-title">Objectifs pédagogiques</h2></div>
+      <ul class="checklist">
+        <li><span>Comprendre ce qu'est l'IA générative et en quoi elle diffère d'une IA de reconnaissance ou de classement (l'IA « discriminative »).</span></li>
+        <li><span>Comprendre, sans jargon mathématique, comment un modèle génératif produit du texte, une image, une voix ou une musique — et pourquoi il se trompe parfois avec assurance.</span></li>
+        <li><span>Acquérir le vocabulaire commun utilisé dans les 11 modules suivants&nbsp;: modèle, poids, token, prompt, génération, fine-tuning, hallucination, biais, fenêtre de contexte.</span></li>
+        <li><span>Comprendre le cadre général des droits, licences et responsabilités liés à l'usage professionnel de l'IA générative.</span></li>
+        <li><span>Être capable de justifier, dans un brief client, pourquoi et quand recourir à l'IA générative — et quand ne pas y recourir.</span></li>
+      </ul>
+    </section>
+
+    <section id="competences">
+      <div class="section-head"><span class="chapter-num">02</span><h2 class="section-title">Compétences acquises</h2></div>
+      <p>À l'issue du module, l'apprenant sait&nbsp;:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Compétence</th><th>Niveau visé</th><th>Vérifiable par</th></tr></thead>
+          <tbody>
+            <tr><td>Expliquer l'IA générative en langage clair à un client non technique</td><td>Autonome</td><td>Exercice pratique + projet du module</td></tr>
+            <tr><td>Repérer une hallucination ou une affirmation non vérifiée dans une sortie IA</td><td>Autonome</td><td>Travail pratique</td></tr>
+            <tr><td>Identifier un risque de conformité avant de livrer un contenu généré par IA</td><td>Assisté</td><td>Projet du module</td></tr>
+            <tr><td>Utiliser le vocabulaire du module dans une conversation professionnelle</td><td>Autonome</td><td>Quiz + échanges en session</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="prerequis">
+      <div class="section-head"><span class="chapter-num">03</span><h2 class="section-title">Prérequis</h2></div>
+      <p>Aucun prérequis technique. Ce module s'adresse à un débutant complet&nbsp;: savoir utiliser un navigateur web et créer un compte en ligne suffit. Aucune notion de code, de mathématiques ou de design n'est nécessaire.</p>
+    </section>
+
+    <section id="intro">
+      <div class="section-head"><span class="chapter-num">04</span><h2 class="section-title">Introduction</h2></div>
+      <p>« J'apprends à créer avec l'IA » — la promesse d'ART-CREAVISION® ACADEMY commence ici, volontairement loin de tout outil. Avant de générer une seule image, la première compétence professionnelle à acquérir est de comprendre ce que l'on manipule. Ce n'est pas une précaution académique&nbsp;: c'est une protection commerciale directe.</p>
+      <p>Prenez un exemple réel, vérifié à la source le 31&nbsp;août 2026&nbsp;: selon le centre d'aide officiel d'OpenAI, les expériences web et application de Sora — son outil de génération vidéo — ont été discontinuées le 26&nbsp;avril 2026, moins de six mois après leur lancement public, et son API sera arrêtée le 24&nbsp;septembre 2026. Un créateur qui aurait appris « Sora » plutôt que « la génération vidéo par IA » se retrouverait aujourd'hui sans compétence transférable. Ce module vous enseigne l'inverse&nbsp;: des principes qui restent vrais quel que soit l'outil qui domine le marché dans six mois.</p>
+      <div class="callout">
+        <div class="callout-label">Ce que ce module n'est pas</div>
+        <p>Ce n'est pas un cours d'histoire de l'intelligence artificielle, ni un cours de programmation. C'est un cours de <strong style="color:var(--white)">littératie professionnelle</strong>&nbsp;: la capacité à comprendre, expliquer et utiliser l'IA générative avec discernement, dans un contexte de production commerciale.</p>
+      </div>
+    </section>
+
+    <section id="lecon1">
+      <div class="section-head"><span class="chapter-num">05</span><h2 class="section-title">Leçons détaillées</h2></div>
+
+      <div class="lesson">
+        <div class="lesson-eyebrow">Leçon 1.1</div>
+        <h3>Qu'est-ce que l'IA générative ?</h3>
+
+        <h4 class="mini-title">Explication pédagogique</h4>
+        <p>Une intelligence artificielle « classique » — dite <strong style="color:var(--white)">discriminative</strong> — répond à une question fermée&nbsp;: « Est-ce un chat ou un chien ? », « Ce mail est-il un spam ? », « Ce visage correspond-il à celui-ci ? ». Elle trie, classe, reconnaît. Une IA <strong style="color:var(--white)">générative</strong> répond à une question ouverte&nbsp;: « Écris-moi… », « Dessine-moi… », « Compose-moi… ». Elle ne choisit pas parmi des options existantes&nbsp;: elle produit une séquence entièrement nouvelle, token par token pour un texte, pixel par pixel (ou plus exactement, étape de débruitage par étape de débruitage) pour une image.</p>
+        <p>Pensez à un chef cuisinier qui a goûté et décomposé des dizaines de milliers de plats au cours de sa carrière. Il n'a mémorisé aucune recette mot pour mot&nbsp;; il a intégré des régularités&nbsp;: quelles saveurs s'accordent, quelles textures se complètent, quelle structure fait qu'un plat « fonctionne ». Face à une demande nouvelle — « un dessert ivoirien revisité, sans sucre raffiné » —, il ne récite pas une fiche, il <em>compose</em> à partir de ces régularités. Un modèle génératif fait la même chose avec du texte, des images, de la voix ou de la musique&nbsp;: il a été entraîné sur d'immenses quantités d'exemples, en a extrait des régularités statistiques, et « compose » une suite plausible en réponse à une consigne — le <strong style="color:var(--white)">prompt</strong>.</p>
+
+        <h4 class="mini-title">Vocabulaire à maîtriser</h4>
+        <dl class="glossary">
+          <dt>Modèle</dt><dd>Le programme entraîné qui a appris ces régularités — ce que l'on interroge derrière une interface comme ChatGPT, Claude ou Midjourney.</dd>
+          <dt>Paramètres / poids</dt><dd>Les réglages internes du modèle, ajustés pendant l'entraînement. On ne les manipule jamais directement en tant qu'utilisateur.</dd>
+          <dt>Token</dt><dd>La plus petite unité de texte qu'un modèle de langage manipule — approximativement un mot ou un fragment de mot.</dd>
+          <dt>Prompt</dt><dd>L'instruction donnée au modèle pour orienter sa génération. C'est l'objet central du Module 3.</dd>
+          <dt>Génération / inférence</dt><dd>Le moment où le modèle produit une sortie à partir d'un prompt.</dd>
+          <dt>Fine-tuning</dt><dd>Un réentraînement ciblé d'un modèle déjà entraîné, pour le spécialiser sur un usage précis — une opération réalisée par les éditeurs de l'outil, rarement par l'utilisateur final.</dd>
+        </dl>
+
+        <h4 class="mini-title">Exemple concret</h4>
+        <p>Demandez à deux assistants conversationnels différents (par exemple ChatGPT et Claude) d'expliquer un même concept avec la même consigne. Les deux réponses seront différentes dans la formulation, parfois dans l'angle choisi, alors qu'aucune des deux n'a « cherché » la réponse quelque part&nbsp;: chacune l'a composée selon les régularités apprises par son propre modèle.</p>
+
+        <h4 class="mini-title">Démonstration proposée</h4>
+        <p>En session, projeter la même consigne envoyée simultanément à deux outils conversationnels et comparer les sorties en direct avec le groupe&nbsp;: vocabulaire choisi, longueur, angle, ton.</p>
+
+        <div class="prompt-block">
+          <div class="p-label">Prompt professionnel — à tester dans deux outils</div>
+          <em>« Tu es un directeur artistique senior. Explique en 150 mots maximum la différence entre une photo argentique et une photo numérique, pour un client qui n'a aucune notion technique, sur un ton élégant et rassurant. »</em>
+        </div>
+
+        <h4 class="mini-title">Erreurs fréquentes</h4>
+        <ul class="checklist">
+          <li><span>Croire que le modèle « cherche » une réponse quelque part sur internet en temps réel (sauf lorsqu'un outil de recherche est explicitement activé).</span></li>
+          <li><span>Confondre « générative » et « intelligente au sens humain » — le modèle compose des régularités, il ne raisonne pas comme une personne.</span></li>
+        </ul>
+
+        <h4 class="mini-title">Bonnes pratiques</h4>
+        <ul class="checklist">
+          <li><span>Toujours garder à l'esprit qu'une sortie générative est une <b>proposition plausible</b>, jamais une certitude par défaut.</span></li>
+          <li><span>Tester la même consigne sur deux outils différents dès que le résultat compte pour un client — c'est un réflexe professionnel, pas une perte de temps.</span></li>
+        </ul>
+      </div>
+
+      <div class="lesson" id="lecon2">
+        <div class="lesson-eyebrow">Leçon 1.2</div>
+        <h3>Comment « pense » un modèle génératif : mécanismes, limites et hallucinations</h3>
+
+        <h4 class="mini-title">Explication pédagogique</h4>
+        <p>Un modèle de langage génère un texte en prédisant, un token à la fois, le mot ou fragment de mot le plus statistiquement plausible compte tenu de tout ce qui précède. Il n'existe aucune étape où le modèle « vérifie » que ce qu'il vient d'écrire est factuellement vrai&nbsp;: il optimise la plausibilité de l'enchaînement, pas l'exactitude. C'est exactement pour cette raison qu'un modèle peut produire, avec la même assurance stylistique, une information exacte et une information inventée. Ce phénomène a un nom&nbsp;: l'<strong style="color:var(--white)">hallucination</strong>.</p>
+        <p>Pour l'image, le principe diffère techniquement (un modèle de diffusion part d'un bruit visuel aléatoire et le « débruite » par étapes successives pour faire émerger une image cohérente avec le prompt) mais la leçon pédagogique est la même&nbsp;: le modèle produit ce qui est statistiquement cohérent avec ce qu'il a appris, pas ce qui est correct dans l'absolu. C'est pour cela qu'un modèle d'image peut, encore aujourd'hui, mal gérer certains détails anatomiques complexes ou incohérents dans une scène très chargée.</p>
+        <p>Deux autres limites structurelles à connaître&nbsp;: la <strong style="color:var(--white)">fenêtre de contexte</strong> (la quantité d'information que le modèle peut « garder à l'esprit » en une seule conversation — au-delà, il commence à oublier le début) et la <strong style="color:var(--white)">date de coupure des connaissances</strong> (le modèle n'a pas connaissance des événements postérieurs à son entraînement, sauf s'il dispose d'un outil de recherche web actif).</p>
+
+        <h4 class="mini-title">Exemple concret</h4>
+        <p>Un modèle interrogé sur un fait très récent ou très pointu répondra souvent de façon fluide et confiante — même quand il invente. C'est la caractéristique la plus trompeuse de l'hallucination&nbsp;: elle ne « sonne » pas comme une erreur.</p>
+
+        <h4 class="mini-title">Démonstration proposée</h4>
+        <p>Demander à chaque apprenant d'inventer un nom de personne ou de lieu clairement fictif, puis d'interroger un assistant conversationnel sur sa biographie ou son histoire. Observer collectivement que le modèle peut produire une réponse détaillée et convaincante… entièrement inventée.</p>
+
+        <div class="prompt-block">
+          <div class="p-label">Prompt professionnel — démonstration d'hallucination</div>
+          <em>« Présente-moi la biographie et les trois principales réalisations de [insérez un nom que vous venez d'inventer, clairement fictif]. »</em>
+        </div>
+
+        <h4 class="mini-title">Erreurs fréquentes</h4>
+        <ul class="checklist">
+          <li><span>Copier-coller une affirmation factuelle générée par IA dans un livrable client sans vérification indépendante.</span></li>
+          <li><span>Croire qu'un ton confiant est un indicateur de fiabilité — c'est précisément l'inverse qui doit alerter.</span></li>
+          <li><span>Ignorer la fenêtre de contexte et s'étonner qu'un assistant « oublie » une instruction donnée trop tôt dans un long échange.</span></li>
+        </ul>
+
+        <h4 class="mini-title">Bonnes pratiques</h4>
+        <ul class="checklist">
+          <li><span>Vérifier systématiquement tout nom propre, chiffre, date ou citation généré avant livraison client.</span></li>
+          <li><span>Rappeler en début de conversation longue les éléments de contexte essentiels plutôt que de supposer qu'ils sont encore « en mémoire ».</span></li>
+          <li><span>Utiliser les fonctions de recherche web intégrées lorsque l'exactitude factuelle est critique.</span></li>
+        </ul>
+      </div>
+
+      <div class="lesson" id="lecon3">
+        <div class="lesson-eyebrow">Leçon 1.3</div>
+        <h3>Droits, licences et usage responsable de l'IA générative</h3>
+
+        <h4 class="mini-title">Explication pédagogique</h4>
+        <p>C'est la leçon la plus directement liée à votre future activité professionnelle&nbsp;: un contenu magnifique produit avec un outil dont vous n'avez pas vérifié les conditions d'usage peut devenir invendable, voire litigieux. Trois questions doivent devenir un réflexe avant tout usage commercial d'un outil d'IA générative&nbsp;:</p>
+        <ol style="padding-left:1.3rem;">
+          <li style="margin-bottom:.5rem;"><strong style="color:var(--white)">Le contenu généré peut-il être utilisé commercialement ?</strong> — Beaucoup d'outils réservent l'usage commercial à un palier payant précis (c'est le cas, entre autres, de plateformes de génération musicale où seuls les abonnements payants incluent les droits commerciaux).</li>
+          <li style="margin-bottom:.5rem;"><strong style="color:var(--white)">Une transparence ou une mention est-elle exigée ?</strong> — Certaines juridictions et certaines plateformes de diffusion imposent de signaler qu'un contenu est généré ou modifié par IA.</li>
+          <li style="margin-bottom:.5rem;"><strong style="color:var(--white)">Le contenu implique-t-il une personne réelle ?</strong> — Cloner une voix, recréer un visage ou imiter le style d'un artiste vivant engage des questions de consentement et de droit à l'image qui dépassent la seule question technique.</li>
+        </ol>
+
+        <div class="callout legal">
+          <div class="callout-label">Avertissement pédagogique</div>
+          <p>Le cadre légal de l'IA générative varie selon les pays et évolue rapidement. Ce module enseigne une <strong style="color:var(--white)">méthode de vigilance</strong>, pas un droit figé&nbsp;: vérifier les conditions d'utilisation de chaque outil avant un usage commercial, et consulter un professionnel du droit pour toute situation à enjeu réel (contrat client important, usage international, image d'une personne réelle). Ce contenu ne constitue pas un conseil juridique.</p>
+        </div>
+
+        <h4 class="mini-title">Un point d'attention spécifique à ART-CREAVISION®</h4>
+        <p>Votre positionnement inclut les <strong style="color:var(--white)">franchises culturelles africaines</strong>. C'est une force de différenciation forte — et cela impose une vigilance particulière&nbsp;: un modèle génératif entraîné majoritairement sur des données occidentales peut produire des représentations culturelles stéréotypées ou approximatives d'un univers africain. La compétence professionnelle attendue n'est pas seulement technique&nbsp;: c'est la capacité à repérer une représentation culturelle fautive et à la corriger, exactement comme on vérifierait un fait erroné.</p>
+
+        <h4 class="mini-title">Exemple concret</h4>
+        <p>Un prompt générique du type « marché africain traditionnel » produit souvent une image générique, mêlant des éléments visuels de régions et d'époques différentes. Un prompt professionnel précise le pays, la région, l'époque et les références culturelles exactes — cette exigence de précision est directement liée à la méthode ACV-PROMPT™ enseignée au Module 3 (variable « Contexte »).</p>
+
+        <h4 class="mini-title">Démonstration proposée</h4>
+        <p>Demander à chaque apprenant de choisir un outil de génération d'image cité dans la Cartographie ACV AI CREATOR TOOL MAP™, puis de localiser en direct, sur le site officiel de cet outil, la clause qui précise si l'usage commercial est inclus. Mettre en commun au tableau&nbsp;: combien d'apprenants ont trouvé la clause en moins de deux minutes ?</p>
+
+        <div class="prompt-block">
+          <div class="p-label">Prompt professionnel — version précise vs version générique</div>
+          <em>Générique (à éviter)&nbsp;: « Marché africain traditionnel, ambiance colorée. »</em><br><br>
+          <em>Professionnel (méthode ACV-PROMPT™)&nbsp;: « Marché de Treichville à Abidjan, fin d'après-midi en saison sèche, étals de tissus wax et d'ignames, lumière dorée rasante, style photojournalisme éditorial, cadrage à hauteur d'homme, sans visage reconnaissable au premier plan. »</em>
+        </div>
+
+        <h4 class="mini-title">Erreurs fréquentes</h4>
+        <ul class="checklist">
+          <li><span>Supposer qu'un outil gratuit ou peu coûteux inclut automatiquement les droits d'usage commercial.</span></li>
+          <li><span>Envoyer un devis client avant d'avoir vérifié les conditions d'utilisation de l'outil prévu pour la production.</span></li>
+          <li><span>Traiter la fidélité culturelle comme un détail esthétique secondaire plutôt que comme une exigence de fond, au même titre qu'un fait erroné.</span></li>
+        </ul>
+
+        <h4 class="mini-title">Bonnes pratiques</h4>
+        <ul class="checklist">
+          <li><span>Toujours consulter la page des conditions d'utilisation commerciale de l'outil avant de livrer un contenu à un client.</span></li>
+          <li><span>Documenter, pour chaque livrable, l'outil et le modèle utilisés — cette traçabilité protège autant le client que vous-même.</span></li>
+          <li><span>Ne jamais cloner une voix ou un visage sans consentement explicite et vérifiable de la personne concernée.</span></li>
+          <li><span>Relire toute représentation culturelle générée avec un œil aussi critique qu'un fait chiffré.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="exercice">
+      <div class="section-head"><span class="chapter-num">06</span><h2 class="section-title">Exercice pratique</h2></div>
+      <p><strong style="color:var(--white)">Consigne&nbsp;:</strong> envoyez le prompt de démonstration de la Leçon 1.1 (comparaison argentique/numérique) à deux assistants conversationnels différents. Notez, pour chacun&nbsp;: la longueur de la réponse, le ton employé, et un élément de contenu présent dans une réponse mais absent de l'autre.</p>
+
+      <h3 class="sub-title" style="margin-top:1.6rem;">Corrigé détaillé</h3>
+      <p>Il n'existe pas de « bonne réponse » unique puisque chaque modèle compose sa propre formulation&nbsp;: le corrigé porte sur la <em>méthode d'observation</em>, pas sur un résultat attendu figé. Une observation réussie identifie correctement&nbsp;:</p>
+      <ul class="checklist">
+        <li><span>Une différence de <b>registre</b> (l'un plus technique, l'autre plus imagé) malgré une consigne identique.</span></li>
+        <li><span>Une différence de <b>structure</b> (liste implicite vs paragraphe continu).</span></li>
+        <li><span>La confirmation qu'aucune des deux réponses n'est « la » réponse officielle&nbsp;: les deux sont des compositions plausibles, à évaluer selon leur adéquation au ton de marque recherché — pas selon une notion de vérité absolue, puisqu'il s'agit ici d'un texte explicatif et non d'un fait vérifiable.</span></li>
+      </ul>
+    </section>
+
+    <section id="quiz">
+      <div class="section-head"><span class="chapter-num">07</span><h2 class="section-title">Quiz</h2></div>
+
+      <div class="quiz-item"><div class="q">1. Qu'est-ce qui distingue une IA générative d'une IA discriminative ?</div>
+        <ol type="A"><li>La générative est plus rapide</li><li>La générative produit une sortie nouvelle, la discriminative classe ou reconnaît</li><li>La discriminative est toujours gratuite</li><li>Il n'y a pas de différence</li></ol></div>
+
+      <div class="quiz-item"><div class="q">2. Une hallucination, dans un modèle génératif, désigne :</div>
+        <ol type="A"><li>Une panne technique du serveur</li><li>Un contenu inventé produit avec la même assurance qu'un contenu exact</li><li>Une fonctionnalité activable dans les réglages</li><li>Un bug d'affichage d'image</li></ol></div>
+
+      <div class="quiz-item"><div class="q">3. Que signifie « fenêtre de contexte » ?</div>
+        <ol type="A"><li>La taille de l'écran utilisé</li><li>La quantité d'information qu'un modèle peut prendre en compte dans une conversation donnée</li><li>Le délai de réponse du modèle</li><li>Le nombre d'images générables par jour</li></ol></div>
+
+      <div class="quiz-item"><div class="q">4. Avant d'utiliser commercialement un contenu généré par IA pour un client, la priorité est de :</div>
+        <ol type="A"><li>Vérifier les conditions d'usage commercial de l'outil utilisé</li><li>Augmenter la résolution de l'image</li><li>Changer le nom de fichier</li><li>Publier immédiatement pour gagner du temps</li></ol></div>
+
+      <div class="quiz-item"><div class="q">5. Vrai ou faux : un modèle génératif « sait » quand il ne connaît pas la réponse et le signale systématiquement.</div>
+        <ol type="A"><li>Vrai</li><li>Faux</li></ol></div>
+
+      <div class="quiz-item"><div class="q">6. Le fine-tuning désigne :</div>
+        <ol type="A"><li>Le réglage du volume audio</li><li>Un réentraînement ciblé d'un modèle pour le spécialiser</li><li>La compression d'une image</li><li>Le choix d'une police de caractères</li></ol></div>
+
+      <div class="quiz-item"><div class="q">7. Face à un prompt générique de type « marché africain traditionnel », le risque pédagogique principal est :</div>
+        <ol type="A"><li>Un temps de génération plus long</li><li>Une représentation culturelle approximative ou stéréotypée</li><li>Un coût plus élevé</li><li>Aucun risque particulier</li></ol></div>
+
+      <div class="quiz-item"><div class="q">8. Que doit faire un professionnel avant de cloner une voix avec un outil d'IA ?</div>
+        <ol type="A"><li>Rien, l'outil s'en charge</li><li>Obtenir le consentement explicite et vérifiable de la personne concernée</li><li>Attendre la sortie de la prochaine version du modèle</li><li>Utiliser uniquement la version gratuite</li></ol></div>
+
+      <h3 class="sub-title" style="margin-top:2rem;">Réponses du quiz</h3>
+      <div class="quiz-answer"><b>1 — B</b><span>La générative compose une sortie nouvelle ; la discriminative trie ou reconnaît parmi des catégories existantes.</span></div>
+      <div class="quiz-answer"><b>2 — B</b><span>L'assurance du ton n'est jamais une garantie d'exactitude.</span></div>
+      <div class="quiz-answer"><b>3 — B</b><span>Au-delà de cette fenêtre, le modèle perd progressivement le début de la conversation.</span></div>
+      <div class="quiz-answer"><b>4 — A</b><span>C'est le réflexe de conformité prioritaire enseigné en Leçon 1.3.</span></div>
+      <div class="quiz-answer"><b>5 — B (Faux)</b><span>C'est justement l'absence de mécanisme de vérification interne qui rend l'hallucination possible.</span></div>
+      <div class="quiz-answer"><b>6 — B</b><span>Une opération réalisée par l'éditeur de l'outil, pas par l'utilisateur final au quotidien.</span></div>
+      <div class="quiz-answer"><b>7 — B</b><span>D'où l'exigence de précision culturelle enseignée dans la méthode ACV-PROMPT™.</span></div>
+      <div class="quiz-answer"><b>8 — B</b><span>Sans quoi la responsabilité éthique et légale repose entièrement sur le créateur du contenu.</span></div>
+    </section>
+
+    <section id="travail">
+      <div class="section-head"><span class="chapter-num">08</span><h2 class="section-title">Travail pratique</h2></div>
+      <p><strong style="color:var(--white)">Consigne&nbsp;:</strong> reproduisez la démonstration d'hallucination de la Leçon 1.2 avec un sujet de votre choix, dans votre domaine créatif (mode, musique, cinéma, artisanat). Rédigez ensuite une fiche de 10 lignes maximum expliquant à un client non technique&nbsp;: ce qu'est une hallucination, pourquoi elle survient, et comment vous, professionnel, la détectez avant livraison.</p>
+
+      <h3 class="sub-title" style="margin-top:1.6rem;">Critères d'évaluation</h3>
+      <div class="table-wrap">
+        <table class="rubric">
+          <thead><tr><th>Critère</th><th>Ce qui est attendu</th><th>Points</th></tr></thead>
+          <tbody>
+            <tr><td>Démonstration réalisée</td><td>Capture ou retranscription claire de l'échange avec l'IA</td><td>4</td></tr>
+            <tr><td>Justesse du vocabulaire</td><td>« Hallucination » et au moins deux termes du glossaire employés correctement</td><td>4</td></tr>
+            <tr><td>Clarté pour un non-technicien</td><td>Fiche compréhensible sans aucun jargon</td><td>6</td></tr>
+            <tr><td>Posture professionnelle</td><td>La fiche rassure sans minimiser le risque</td><td>6</td></tr>
+            <tr><td><strong>Total</strong></td><td></td><td><strong>20</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="projet">
+      <div class="section-head"><span class="chapter-num">09</span><h2 class="section-title">Projet du module</h2></div>
+      <p><strong style="color:var(--white)">Consigne&nbsp;:</strong> pour un client fictif de votre choix (marque, artiste, association), rédigez une <strong style="color:var(--white)">Charte d'usage responsable de l'IA générative</strong> d'une page, destinée à accompagner toute future production. Elle doit répondre à quatre questions&nbsp;: dans quels cas l'IA générative sera utilisée pour ce client&nbsp;; comment les sorties seront vérifiées avant livraison&nbsp;; comment les droits d'usage commercial seront contrôlés outil par outil&nbsp;; comment la fidélité culturelle des représentations sera garantie si le sujet le justifie.</p>
+
+      <h3 class="sub-title" style="margin-top:1.6rem;">Corrigé — exemple de production attendue</h3>
+      <div class="item">
+        <div class="item-head"><h4>Charte d'usage responsable de l'IA — Maison [Client fictif]</h4></div>
+        <p><strong style="color:var(--white)">1. Cas d'usage&nbsp;:</strong> génération d'images de moodboard en phase d'exploration créative uniquement ; tout visuel final destiné à la publication est retravaillé et validé par un directeur artistique humain.<br>
+        <strong style="color:var(--white)">2. Vérification&nbsp;:</strong> toute affirmation factuelle (dates, lieux, références culturelles) générée par IA est vérifiée par une source indépendante avant intégration à un livrable.<br>
+        <strong style="color:var(--white)">3. Droits&nbsp;:</strong> seuls des outils dont le palier d'abonnement inclut explicitement l'usage commercial sont utilisés pour les livrables finaux ; la référence est documentée dans le dossier de production.<br>
+        <strong style="color:var(--white)">4. Fidélité culturelle&nbsp;:</strong> toute représentation culturelle spécifique est relue par une personne connaissant le contexte concerné avant validation finale.</p>
+      </div>
+      <p style="margin-top:.8rem;">Ce corrigé est un exemple de structure, pas un texte à recopier&nbsp;: l'évaluateur doit vérifier que les quatre points sont couverts avec un contenu propre à chaque client fictif choisi.</p>
+    </section>
+
+    <section id="defi">
+      <div class="section-head"><span class="chapter-num">10</span><h2 class="section-title">Défi supplémentaire</h2></div>
+      <p>Trouvez, en cherchant sur les sites officiels de deux outils d'IA générative de familles différentes (par exemple un outil de texte et un outil d'image), leurs conditions d'usage commercial respectives. Comparez-les et identifiez lequel des deux impose la condition la plus stricte. Ce défi prépare directement la posture de veille attendue au Module 2.</p>
+    </section>
+
+    <section id="ressources">
+      <div class="section-head"><span class="chapter-num">11</span><h2 class="section-title">Ressources à fournir à l'apprenant</h2></div>
+      <ul class="checklist">
+        <li><span>Glossaire du Module 1 (les 8 termes de la Leçon 1.1, format fiche détachable)</span></li>
+        <li><span>Modèle vierge de Charte d'usage responsable de l'IA (à dupliquer pour chaque client)</span></li>
+        <li><span>Grille des 3 questions de vigilance de la Leçon 1.3, au format aide-mémoire imprimable</span></li>
+        <li><span>Lien vers la Cartographie ACV AI CREATOR TOOL MAP™ pour situer chaque outil cité dans ce module</span></li>
+      </ul>
+    </section>
+
+    <section id="fiches">
+      <div class="section-head"><span class="chapter-num">12</span><h2 class="section-title">Fiches formateur &amp; étudiant</h2></div>
+      <div class="sheet-grid">
+        <div class="sheet">
+          <div class="sheet-label">Fiche formateur</div>
+          <h4>Module 1 — Notes d'animation</h4>
+          <ul>
+            <li><strong style="color:var(--white)">Durée&nbsp;:</strong> 3-4h en présentiel ou synchrone, 3 leçons de 45-60 min + exercices.</li>
+            <li><strong style="color:var(--white)">Point de vigilance n°1&nbsp;:</strong> la démonstration d'hallucination (Leçon 1.2) fonctionne mieux en direct qu'en asynchrone — l'effet de surprise du groupe renforce la mémorisation.</li>
+            <li><strong style="color:var(--white)">Point de vigilance n°2&nbsp;:</strong> certains apprenants connaissent déjà superficiellement ChatGPT — recentrer systématiquement sur le « pourquoi » (mécanisme) plutôt que le « comment » (interface), qui n'est pas l'objet de ce module.</li>
+            <li><strong style="color:var(--white)">Question fréquente à anticiper&nbsp;:</strong> « L'IA va-t-elle remplacer le métier de créatif ? » — Rediriger vers le positionnement du programme&nbsp;: l'IA change l'outil, pas la nécessité d'un jugement de direction artistique (annonce du Module 5).</li>
+            <li><strong style="color:var(--white)">Erreur d'animation à éviter&nbsp;:</strong> passer trop de temps sur les détails techniques du fonctionnement des modèles de diffusion — l'analogie suffit à ce niveau, la technicité n'est pas un objectif du module.</li>
+          </ul>
+        </div>
+        <div class="sheet">
+          <div class="sheet-label">Fiche étudiant</div>
+          <h4>Module 1 — Ce qu'il faut retenir</h4>
+          <ul>
+            <li>L'IA générative <strong style="color:var(--white)">compose</strong> une réponse plausible, elle ne « sait » pas au sens humain.</li>
+            <li>Une hallucination peut être aussi confiante en apparence qu'une information exacte — la seule protection est la vérification systématique.</li>
+            <li>Avant tout usage commercial&nbsp;: vérifier les droits, documenter l'outil utilisé, obtenir un consentement pour toute voix ou visage réel.</li>
+            <li>Une représentation culturelle générée se relit avec autant de rigueur qu'un chiffre.</li>
+            <li>Vocabulaire clé à retenir&nbsp;: modèle, token, prompt, génération, fine-tuning, hallucination, fenêtre de contexte.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="brand">ART-CREAVISION®</span> AI STUDIO — Module 1 / 12 · « Maîtriser l'IA générative pour la création™ ». Document de production interne, version 1 — soumis à contrôle qualité avant intégration au manuel final.
+  </footer>
+</div>
+
+<script src="support.js" defer></script>
+</body>
+</html>
